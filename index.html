@@ -27,7 +27,7 @@
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
   
   <!-- Main CSS File -->
-  <link href="assets/css/main.css?v=20260712" rel="stylesheet">
+  <link href="assets/css/main.css?v=20260712-2" rel="stylesheet">
 
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -132,13 +132,13 @@
 
       <div class="product-price-box">
         <div class="price-direct">
-          <span class="price-now">3&nbsp;899&nbsp;₽</span>
+          <span class="price-now">3&nbsp;999&nbsp;₽</span>
           <span class="price-label">напрямую, без комиссии Ozon</span>
         </div>
         <div class="price-ozon">На Ozon: <span class="price-old">6&nbsp;566&nbsp;₽</span></div>
       </div>
 
-      <button type="button" class="button product-order-btn" onclick="orderProduct()">Заказать напрямую — 3&nbsp;899&nbsp;₽</button>
+      <button type="button" class="button product-order-btn" onclick="orderProduct()">Заказать напрямую — 3&nbsp;999&nbsp;₽</button>
       <a class="product-ozon-link" href="https://www.ozon.ru/product/jindodo-vibroplatforma-dlya-pohudeniya-do-150kg-kardio-trenazher-domashniy-elektricheskiy-1951709896/?from=share_android&perehod=smm_share_button_productpage_link&short=fIEb7ig" target="_blank" rel="noopener">Посмотреть на Ozon</a>
       <p class="product-order-note">⏱ В течение 30 минут свяжемся для подтверждения заказа. 📦 Доставим в ваш город.</p>
     </div>
@@ -149,8 +149,11 @@
 <div class="order-popup order-popup-preview" id="orderPopupPreview">
   <div class="order-content" onclick="event.stopPropagation()">
     <div class="close-btn" onclick="closeOrderPreview(event)">✖</div>
-    <div class="order-image">
-      <img id="popupPreviewImage" src="" alt="">
+    <div class="order-image order-image-slider" id="popupSlider">
+      <button type="button" class="popup-nav popup-prev" aria-label="Предыдущее фото" onclick="popupStep(-1)">&#8249;</button>
+      <img id="popupPreviewImage" src="" alt="Jindodo виброплатформа">
+      <button type="button" class="popup-nav popup-next" aria-label="Следующее фото" onclick="popupStep(1)">&#8250;</button>
+      <div class="popup-dots" id="popupDots"></div>
     </div>
     <div class="order-details order-preview-details">
       <h3 id="popupPreviewTitle">Название товара</h3>
@@ -319,11 +322,11 @@
 
       <p class="ozon-card-text">
         Наш товар продаётся на Ozon за <b>6&nbsp;566&nbsp;₽</b>. Вы можете заказать <b>напрямую у нас</b>
-        без комиссии маркетплейса — всего <b>3&nbsp;899&nbsp;₽</b> с доставкой.
+        без комиссии маркетплейса — всего <b>3&nbsp;999&nbsp;₽</b> с доставкой.
       </p>
 
       <div class="ozon-card-actions">
-        <button type="button" class="button ozon-direct-btn" onclick="scrollToProduct()">Заказать напрямую — 3&nbsp;899&nbsp;₽</button>
+        <button type="button" class="button ozon-direct-btn" onclick="scrollToProduct()">Заказать напрямую — 3&nbsp;999&nbsp;₽</button>
         <a class="ozon-link-btn" href="https://www.ozon.ru/product/jindodo-vibroplatforma-dlya-pohudeniya-do-150kg-kardio-trenazher-domashniy-elektricheskiy-1951709896/?from=share_android&perehod=smm_share_button_productpage_link&short=fIEb7ig" target="_blank" rel="noopener">Открыть на Ozon — 6&nbsp;566&nbsp;₽</a>
       </div>
     </div>
@@ -392,10 +395,14 @@
       var GALLERY_DIR = 'assets/img/gallery-5/';
       var GALLERY_MAX = 20;
       var PRODUCT_TITLE = 'Jindodo Виброплатформа для похудения до 150 кг';
-      var PRODUCT_PRICE = 3899;
+      var PRODUCT_PRICE = 3999;
 
       var galleryImages = [];
       var galleryIndex = 0;
+
+      // Отдельная лента фото для попапа (файлы tovar-1.webp, tovar-2.webp …).
+      var popupImages = [];
+      var popupIndex = 0;
 
       function el(id) { return document.getElementById(id); }
 
@@ -442,9 +449,46 @@
 
       window.galleryStep = function (d) { setGalleryIndex(galleryIndex + d); };
 
+      function renderPopupDots() {
+        var dots = el('popupDots');
+        if (!dots) return;
+        dots.innerHTML = '';
+        if (popupImages.length < 2) return;
+        popupImages.forEach(function (_, i) {
+          var d = document.createElement('button');
+          d.type = 'button';
+          d.className = 'popup-dot' + (i === popupIndex ? ' is-active' : '');
+          d.setAttribute('aria-label', 'Фото ' + (i + 1));
+          d.addEventListener('click', function () { setPopupIndex(i); });
+          dots.appendChild(d);
+        });
+      }
+
+      function setPopupIndex(i) {
+        if (!popupImages.length) return;
+        var n = popupImages.length;
+        popupIndex = ((i % n) + n) % n;
+        var img = el('popupPreviewImage');
+        if (img) img.src = popupImages[popupIndex];
+        var dots = el('popupDots');
+        if (dots) {
+          Array.prototype.forEach.call(dots.children, function (c, idx) {
+            c.classList.toggle('is-active', idx === popupIndex);
+          });
+        }
+        var nav = document.querySelectorAll('#popupSlider .popup-nav');
+        var many = popupImages.length > 1;
+        nav.forEach(function (el2) { el2.style.display = many ? '' : 'none'; });
+      }
+
+      window.popupStep = function (d) { setPopupIndex(popupIndex + d); };
+
       window.orderProduct = function () {
-        var img = galleryImages[galleryIndex] || (el('productMainImage') || {}).src;
+        var img = popupImages[0] || galleryImages[galleryIndex] || (el('productMainImage') || {}).src;
+        popupIndex = 0;
         if (typeof openOrder === 'function') openOrder(img, PRODUCT_TITLE, PRODUCT_PRICE);
+        renderPopupDots();
+        setPopupIndex(0);
       };
 
       window.scrollToProduct = function () {
@@ -452,11 +496,11 @@
         if (p) p.scrollIntoView({ behavior: 'smooth', block: 'start' });
       };
 
-      function probeGallery(done) {
+      function probeSeries(prefix, done) {
         var found = [];
         (function next(i) {
           if (i > GALLERY_MAX) { done(found); return; }
-          var url = GALLERY_DIR + 'gallery-' + i + '.webp';
+          var url = GALLERY_DIR + prefix + i + '.webp';
           var probe = new Image();
           probe.onload = function () { found.push(url); next(i + 1); };
           probe.onerror = function () { done(found); };
@@ -464,32 +508,42 @@
         })(1);
       }
 
-      function initSwipe() {
-        var stage = document.querySelector('.product-stage');
-        if (!stage) return;
+      function attachSwipe(node, onSwipe) {
+        if (!node) return;
         var x0 = null;
-        stage.addEventListener('touchstart', function (e) {
+        node.addEventListener('touchstart', function (e) {
           x0 = e.changedTouches[0].clientX;
         }, { passive: true });
-        stage.addEventListener('touchend', function (e) {
+        node.addEventListener('touchend', function (e) {
           if (x0 === null) return;
           var dx = e.changedTouches[0].clientX - x0;
-          if (Math.abs(dx) > 40) setGalleryIndex(galleryIndex + (dx < 0 ? 1 : -1));
+          if (Math.abs(dx) > 40) onSwipe(dx < 0 ? 1 : -1);
           x0 = null;
         }, { passive: true });
       }
 
+      function popupIsOpen() {
+        var p = el('orderPopupPreview');
+        return p && getComputedStyle(p).display !== 'none';
+      }
+
       document.addEventListener('keydown', function (e) {
-        if (e.key === 'ArrowLeft') setGalleryIndex(galleryIndex - 1);
-        else if (e.key === 'ArrowRight') setGalleryIndex(galleryIndex + 1);
+        var dir = e.key === 'ArrowLeft' ? -1 : (e.key === 'ArrowRight' ? 1 : 0);
+        if (!dir) return;
+        if (popupIsOpen()) setPopupIndex(popupIndex + dir);
+        else setGalleryIndex(galleryIndex + dir);
       });
 
       document.addEventListener('DOMContentLoaded', function () {
-        initSwipe();
-        probeGallery(function (found) {
+        attachSwipe(document.querySelector('.product-stage'), function (d) { setGalleryIndex(galleryIndex + d); });
+        attachSwipe(el('popupSlider'), function (d) { setPopupIndex(popupIndex + d); });
+        probeSeries('gallery-', function (found) {
           galleryImages = found.length ? found : [GALLERY_DIR + 'gallery-1.webp'];
           renderThumbs();
           setGalleryIndex(0);
+        });
+        probeSeries('tovar-', function (found) {
+          popupImages = found.length ? found : galleryImages.slice();
         });
       });
     })();
