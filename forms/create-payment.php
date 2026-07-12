@@ -35,8 +35,8 @@ if (function_exists('mb_substr')) {
 }
 
 $returnUrl = isset($input['return_url']) ? trim((string) $input['return_url']) : '';
-if ($returnUrl === '' || !preg_match('#^https://(www\.)?capes-auto\.ru(/|$)#', $returnUrl)) {
-  $returnUrl = 'https://capes-auto.ru/';
+if ($returnUrl === '' || !preg_match('#^https://(www\.)?capes-auto\.online(/|$)#', $returnUrl)) {
+  $returnUrl = 'https://capes-auto.online/';
 }
 
 $customerEmail = isset($input['customer_email']) ? trim((string) $input['customer_email']) : '';
