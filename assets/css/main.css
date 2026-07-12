@@ -3359,3 +3359,117 @@ section,
   .product-nav { width: 38px; height: 38px; font-size: 22px; }
   .ozon-card { padding: 22px 16px; }
 }
+
+/*--------------------------------------------------------------
+# Слайдер фото в попапе товара
+--------------------------------------------------------------*/
+.order-image-slider {
+  position: relative;
+}
+
+.order-image-slider .popup-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  transition: background 0.2s;
+}
+
+.order-image-slider .popup-nav:hover {
+  background: rgba(0, 0, 0, 0.82);
+}
+
+.order-image-slider .popup-prev { left: 8px; }
+.order-image-slider .popup-next { right: 8px; }
+
+.popup-dots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  z-index: 3;
+}
+
+.popup-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.popup-dot.is-active {
+  background: var(--accent-color);
+  transform: scale(1.35);
+}
+
+/*--------------------------------------------------------------
+# Дизайнерская лента превью на мобильном
+--------------------------------------------------------------*/
+.product-thumbs {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-color) rgba(255, 255, 255, 0.08);
+  scroll-behavior: smooth;
+}
+
+.product-thumbs::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.product-thumbs::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+}
+
+.product-thumbs::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--accent-color), #1c7d5b);
+  border-radius: 10px;
+}
+
+@media (max-width: 900px) {
+  .product-gallery {
+    gap: 12px;
+  }
+  .product-thumbs {
+    scroll-snap-type: x mandatory;
+    gap: 12px;
+    padding: 6px 4px 12px;
+    -webkit-overflow-scrolling: touch;
+    mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
+  }
+  .product-thumbs::-webkit-scrollbar {
+    height: 5px;
+  }
+  .product-thumbs::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, var(--accent-color), #1c7d5b);
+  }
+  .product-thumb {
+    scroll-snap-align: center;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  }
+  .product-thumb.is-active {
+    box-shadow: 0 0 0 2px var(--accent-color), 0 4px 12px rgba(39, 167, 118, 0.45);
+    transform: translateY(-2px);
+  }
+}
