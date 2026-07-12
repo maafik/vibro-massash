@@ -312,13 +312,13 @@ function backToProductPreview(event) {
 }
 
 function updatePrice() {
-  const rearSeatCheckbox = document.getElementById('backSeatCheckbox');
-  if (!rearSeatCheckbox || !selectedItem || !Number.isFinite(selectedItem.price)) return;
+  if (!selectedItem || !Number.isFinite(selectedItem.price)) return;
 
-  const addPrice = parseInt(rearSeatCheckbox.dataset.price, 10) || 0;
+  const rearSeatCheckbox = document.getElementById('backSeatCheckbox');
+  const addPrice = rearSeatCheckbox ? (parseInt(rearSeatCheckbox.dataset.price, 10) || 0) : 0;
 
   totalPrice = selectedItem.price;
-  if (rearSeatCheckbox.checked) {
+  if (rearSeatCheckbox && rearSeatCheckbox.checked) {
     totalPrice += addPrice;
   }
 
