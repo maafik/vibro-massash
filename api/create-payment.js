@@ -161,8 +161,8 @@ module.exports = async function handler(req, res) {
   description = description.slice(0, 128);
 
   let returnUrl = String(input.return_url || '').trim();
-  if (!/^https:\/\/(www\.)?capes-auto\.ru(\/|$)/.test(returnUrl)) {
-    returnUrl = 'https://capes-auto.ru/';
+  if (!/^https:\/\/(www\.)?capes-auto\.online(\/|$)/.test(returnUrl)) {
+    returnUrl = 'https://capes-auto.online/';
   }
 
   const customerEmail = String(input.customer_email || '').trim();
