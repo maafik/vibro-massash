@@ -27,7 +27,7 @@
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
   
   <!-- Main CSS File -->
-  <link href="assets/css/main.css?v=20260713-1" rel="stylesheet">
+  <link href="assets/css/main.css?v=20260713-2" rel="stylesheet">
 
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -131,6 +131,29 @@
         <li>Комплект крепежа и кольцо для груши в комплекте</li>
       </ul>
 
+      <div class="product-variants">
+        <div class="variant-group">
+          <span class="variant-label">Длина перекладины, см: <b id="lenValue">100</b></span>
+          <div class="variant-options" id="lenOptions">
+            <button type="button" class="variant-opt is-active" data-len="100">100</button>
+            <button type="button" class="variant-opt" data-len="100.1">100.1</button>
+            <button type="button" class="variant-opt" data-len="100.2">100.2</button>
+            <button type="button" class="variant-opt" data-len="100.3">100.3</button>
+            <button type="button" class="variant-opt" data-len="100.4">100.4</button>
+            <button type="button" class="variant-opt" data-len="110">110</button>
+            <button type="button" class="variant-opt" data-len="110.1">110.1</button>
+            <button type="button" class="variant-opt" data-len="110.2">110.2</button>
+          </div>
+        </div>
+        <div class="variant-group">
+          <span class="variant-label">Максимальный вес пользователя, кг: <b id="weightValue">200</b></span>
+          <div class="variant-options" id="weightOptions">
+            <button type="button" class="variant-opt is-active" data-weight="200">200</button>
+            <button type="button" class="variant-opt" data-weight="250">250</button>
+          </div>
+        </div>
+      </div>
+
       <div class="product-price-box">
         <div class="price-direct">
           <span class="price-now">3&nbsp;990&nbsp;₽</span>
@@ -145,11 +168,11 @@
 
       <div class="product-specs">
         <div class="product-specs-row"><span>Тип</span><span>Турник-брусья-пресс 3&nbsp;в&nbsp;1</span></div>
-        <div class="product-specs-row"><span>Длина перекладины</span><span>100 см</span></div>
+        <div class="product-specs-row"><span>Длина перекладины</span><span><span id="specLen">100</span> см</span></div>
         <div class="product-specs-row"><span>Вынос от стены перекладины</span><span>41 см</span></div>
         <div class="product-specs-row"><span>Вынос от стены брусьев</span><span>78 см</span></div>
         <div class="product-specs-row"><span>Диаметр перекладины</span><span>25 мм</span></div>
-        <div class="product-specs-row"><span>Макс. вес пользователя</span><span>200 кг</span></div>
+        <div class="product-specs-row"><span>Макс. вес пользователя</span><span><span id="specWeight">200</span> кг</span></div>
         <div class="product-specs-row"><span>Крепление</span><span>Настенное, 8 точек</span></div>
         <div class="product-specs-row"><span>Мышцы</span><span>Грудь, пресс, руки, спина</span></div>
         <div class="product-specs-row"><span>Страна-изготовитель</span><span>Россия</span></div>
@@ -411,6 +434,56 @@
       var PRODUCT_TITLE = 'Турник брусья пресс 3в1 HOMEGYMS настенный, чёрный';
       var PRODUCT_PRICE = 3990;
 
+      // Цены по варианту «максимальный вес» (длина перекладины на цену не влияет).
+      // { direct: цена напрямую, ozon: цена на Ozon }
+      var PRICE_BY_WEIGHT = {
+        '200': { direct: 3990, ozon: 5990 },
+        '250': { direct: 4490, ozon: 6490 }
+      };
+      var selectedLen = '100';
+      var selectedWeight = '200';
+
+      function rub(n) {
+        return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0') + '\u00a0\u20bd';
+      }
+
+      function applyVariant() {
+        var p = PRICE_BY_WEIGHT[selectedWeight] || PRICE_BY_WEIGHT['200'];
+        PRODUCT_PRICE = p.direct;
+        PRODUCT_TITLE = 'Турник брусья пресс 3в1 HOMEGYMS настенный, чёрный — ' +
+          selectedLen + ' см, до ' + selectedWeight + ' кг';
+        var q = function (s) { return document.querySelector(s); };
+        var now = q('.price-now'); if (now) now.innerHTML = rub(p.direct);
+        var old = q('.price-old'); if (old) old.innerHTML = rub(p.ozon);
+        var btn = q('.product-order-btn'); if (btn) btn.innerHTML = 'Заказать напрямую — ' + rub(p.direct);
+        var oNow = document.querySelectorAll('.ozon-card-text b');
+        if (oNow && oNow.length >= 2) { oNow[0].innerHTML = rub(p.ozon); oNow[oNow.length - 1].innerHTML = rub(p.direct); }
+        var oBtn = q('.ozon-direct-btn'); if (oBtn) oBtn.innerHTML = 'Заказать напрямую — ' + rub(p.direct);
+        var oLink = q('.ozon-link-btn'); if (oLink) oLink.innerHTML = 'Открыть на Ozon — ' + rub(p.ozon);
+        var lv = el('lenValue'); if (lv) lv.textContent = selectedLen;
+        var wv = el('weightValue'); if (wv) wv.textContent = selectedWeight;
+        var sl = el('specLen'); if (sl) sl.textContent = selectedLen;
+        var sw = el('specWeight'); if (sw) sw.textContent = selectedWeight;
+      }
+
+      function bindVariants() {
+        var lenBox = el('lenOptions');
+        var wBox = el('weightOptions');
+        function bind(box, attr, set) {
+          if (!box) return;
+          box.addEventListener('click', function (e) {
+            var b = e.target.closest('.variant-opt');
+            if (!b) return;
+            Array.prototype.forEach.call(box.children, function (c) { c.classList.remove('is-active'); });
+            b.classList.add('is-active');
+            set(b.getAttribute(attr));
+            applyVariant();
+          });
+        }
+        bind(lenBox, 'data-len', function (v) { selectedLen = v; });
+        bind(wBox, 'data-weight', function (v) { selectedWeight = v; });
+      }
+
       var galleryImages = [];
       var galleryIndex = 0;
 
@@ -549,6 +622,8 @@
       });
 
       document.addEventListener('DOMContentLoaded', function () {
+        bindVariants();
+        applyVariant();
         attachSwipe(document.querySelector('.product-stage'), function (d) { setGalleryIndex(galleryIndex + d); });
         attachSwipe(el('popupSlider'), function (d) { setPopupIndex(popupIndex + d); });
         probeSeries('gallery-', function (found) {
