@@ -330,6 +330,21 @@ function updatePrice() {
   updateConsentStatus();
 }
 
+/** Обновить цену/название выбранного товара без сброса формы (для выбора варианта в попапе). */
+function updateSelectedPrice(price, title) {
+  if (!selectedItem) return;
+  selectedItem.price = parseInt(price, 10);
+  if (title) {
+    selectedItem.title = title;
+    const t1 = document.getElementById('popupPreviewTitle');
+    const t2 = document.getElementById('popupTitle');
+    if (t1) t1.innerText = title;
+    if (t2) t2.innerText = title;
+  }
+  updatePrice();
+}
+window.updateSelectedPrice = updateSelectedPrice;
+
 function openPolicyPopup(event) {
   if (event) event.preventDefault();
   const popup = document.getElementById('policyPopup');

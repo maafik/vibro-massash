@@ -3236,6 +3236,116 @@ section,
   color: #838383;
 }
 
+/* Выбор варианта товара */
+.product-variants {
+  margin: 0 0 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.variant-label {
+  display: block;
+  font-size: 14px;
+  color: #9a9a9a;
+  margin-bottom: 8px;
+}
+
+.variant-label b {
+  color: #ededed;
+  font-weight: 600;
+}
+
+.variant-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.variant-opt {
+  min-width: 52px;
+  padding: 9px 14px;
+  font-size: 14px;
+  color: #ededed;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color .15s, background-color .15s;
+}
+
+.variant-opt:hover {
+  border-color: var(--accent-color);
+}
+
+.variant-opt.is-active {
+  border-color: var(--accent-color);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 1px var(--accent-color) inset;
+}
+
+/* Выбор варианта в попапе (выпадающие списки) */
+.popup-variants {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 4px 0 14px;
+}
+
+.popup-variant {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: #9a9a9a;
+}
+
+.popup-variant select {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 15px;
+  color: #ededed;
+  background: #1c1c1c;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 10px;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23bbb' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.popup-variant select:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}
+
+/* Характеристики товара */
+.product-specs {
+  margin-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.product-specs-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.product-specs-row span:first-child {
+  color: #9a9a9a;
+  flex: 0 0 auto;
+}
+
+.product-specs-row span:last-child {
+  color: #ededed;
+  text-align: right;
+  font-weight: 500;
+}
+
 /*--------------------------------------------------------------
 # Ozon review / order card
 --------------------------------------------------------------*/
