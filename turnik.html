@@ -27,7 +27,7 @@
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
   
   <!-- Main CSS File -->
-  <link href="assets/css/main.css?v=20260713-2" rel="stylesheet">
+  <link href="assets/css/main.css?v=20260713-3" rel="stylesheet">
 
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -131,38 +131,15 @@
         <li>Комплект крепежа и кольцо для груши в комплекте</li>
       </ul>
 
-      <div class="product-variants">
-        <div class="variant-group">
-          <span class="variant-label">Длина перекладины, см: <b id="lenValue">100</b></span>
-          <div class="variant-options" id="lenOptions">
-            <button type="button" class="variant-opt is-active" data-len="100">100</button>
-            <button type="button" class="variant-opt" data-len="100.1">100.1</button>
-            <button type="button" class="variant-opt" data-len="100.2">100.2</button>
-            <button type="button" class="variant-opt" data-len="100.3">100.3</button>
-            <button type="button" class="variant-opt" data-len="100.4">100.4</button>
-            <button type="button" class="variant-opt" data-len="110">110</button>
-            <button type="button" class="variant-opt" data-len="110.1">110.1</button>
-            <button type="button" class="variant-opt" data-len="110.2">110.2</button>
-          </div>
-        </div>
-        <div class="variant-group">
-          <span class="variant-label">Максимальный вес пользователя, кг: <b id="weightValue">200</b></span>
-          <div class="variant-options" id="weightOptions">
-            <button type="button" class="variant-opt is-active" data-weight="200">200</button>
-            <button type="button" class="variant-opt" data-weight="250">250</button>
-          </div>
-        </div>
-      </div>
-
       <div class="product-price-box">
         <div class="price-direct">
-          <span class="price-now">3&nbsp;990&nbsp;₽</span>
+          <span class="price-now">от 3&nbsp;990&nbsp;₽</span>
           <span class="price-label">напрямую, без комиссии Ozon</span>
         </div>
-        <div class="price-ozon">На Ozon: <span class="price-old">5&nbsp;990&nbsp;₽</span></div>
+        <div class="price-ozon">На Ozon: <span class="price-old">от 5&nbsp;990&nbsp;₽</span></div>
       </div>
 
-      <button type="button" class="button product-order-btn" onclick="orderProduct()">Заказать напрямую — 3&nbsp;990&nbsp;₽</button>
+      <button type="button" class="button product-order-btn" onclick="orderProduct()">Заказать напрямую</button>
       <a class="product-ozon-link" href="https://www.ozon.ru/product/turnik-brusya-press-3v1-homegyms-nastennyy-chernyy-853547425/" target="_blank" rel="noopener">Посмотреть на Ozon</a>
       <p class="product-order-note">⏱ В течение 30 минут свяжемся для подтверждения заказа. 📦 Доставим в ваш город.</p>
 
@@ -194,6 +171,28 @@
     </div>
     <div class="order-details order-preview-details">
       <h3 id="popupPreviewTitle">Название товара</h3>
+      <div class="popup-variants">
+        <label class="popup-variant">
+          <span>Длина перекладины, см</span>
+          <select id="popupLen">
+            <option value="100">100</option>
+            <option value="100.1">100.1</option>
+            <option value="100.2">100.2</option>
+            <option value="100.3">100.3</option>
+            <option value="100.4">100.4</option>
+            <option value="110">110</option>
+            <option value="110.1">110.1</option>
+            <option value="110.2">110.2</option>
+          </select>
+        </label>
+        <label class="popup-variant">
+          <span>Максимальный вес пользователя, кг</span>
+          <select id="popupWeight">
+            <option value="200">200</option>
+            <option value="250">250</option>
+          </select>
+        </label>
+      </div>
       <p id="popupPreviewPrice">Цена: </p>
       <div class="policy-checks">
         <label class="policy-checkbox">
@@ -422,7 +421,7 @@
   <script>window.PAYMENT_API_BASE = 'https://nakidky.vercel.app';</script>
 
   <!-- Main JS File -->
-  <script src="assets/js/main.js?v=20260712" defer></script>
+  <script src="assets/js/main.js?v=20260713" defer></script>
 
   <!-- Галерея товара (в стиле Ozon) -->
   <script>
@@ -440,48 +439,37 @@
         '200': { direct: 3990, ozon: 5990 },
         '250': { direct: 4490, ozon: 6490 }
       };
-      var selectedLen = '100';
-      var selectedWeight = '200';
+      var BASE_TITLE = 'Турник брусья пресс 3в1 HOMEGYMS настенный, чёрный';
 
-      function rub(n) {
-        return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0') + '\u00a0\u20bd';
+      function currentLen() { var s = el('popupLen'); return s ? s.value : '100'; }
+      function currentWeight() { var s = el('popupWeight'); return s ? s.value : '200'; }
+      function currentPrice() { return (PRICE_BY_WEIGHT[currentWeight()] || PRICE_BY_WEIGHT['200']).direct; }
+      function currentTitle() {
+        return BASE_TITLE + ' — ' + currentLen() + ' см, до ' + currentWeight() + ' кг';
       }
 
-      function applyVariant() {
-        var p = PRICE_BY_WEIGHT[selectedWeight] || PRICE_BY_WEIGHT['200'];
-        PRODUCT_PRICE = p.direct;
-        PRODUCT_TITLE = 'Турник брусья пресс 3в1 HOMEGYMS настенный, чёрный — ' +
-          selectedLen + ' см, до ' + selectedWeight + ' кг';
-        var q = function (s) { return document.querySelector(s); };
-        var now = q('.price-now'); if (now) now.innerHTML = rub(p.direct);
-        var old = q('.price-old'); if (old) old.innerHTML = rub(p.ozon);
-        var btn = q('.product-order-btn'); if (btn) btn.innerHTML = 'Заказать напрямую — ' + rub(p.direct);
-        var oNow = document.querySelectorAll('.ozon-card-text b');
-        if (oNow && oNow.length >= 2) { oNow[0].innerHTML = rub(p.ozon); oNow[oNow.length - 1].innerHTML = rub(p.direct); }
-        var oBtn = q('.ozon-direct-btn'); if (oBtn) oBtn.innerHTML = 'Заказать напрямую — ' + rub(p.direct);
-        var oLink = q('.ozon-link-btn'); if (oLink) oLink.innerHTML = 'Открыть на Ozon — ' + rub(p.ozon);
-        var lv = el('lenValue'); if (lv) lv.textContent = selectedLen;
-        var wv = el('weightValue'); if (wv) wv.textContent = selectedWeight;
-        var sl = el('specLen'); if (sl) sl.textContent = selectedLen;
-        var sw = el('specWeight'); if (sw) sw.textContent = selectedWeight;
+      // Отражаем выбранный вариант в характеристиках и блоке Ozon на странице.
+      function reflectVariantOnPage() {
+        var p = PRICE_BY_WEIGHT[currentWeight()] || PRICE_BY_WEIGHT['200'];
+        var sl = el('specLen'); if (sl) sl.textContent = currentLen();
+        var sw = el('specWeight'); if (sw) sw.textContent = currentWeight();
+      }
+
+      // Смена варианта в попапе: обновляем цену без сброса формы.
+      function onPopupVariantChange() {
+        PRODUCT_PRICE = currentPrice();
+        PRODUCT_TITLE = currentTitle();
+        reflectVariantOnPage();
+        if (typeof window.updateSelectedPrice === 'function') {
+          window.updateSelectedPrice(currentPrice(), currentTitle());
+        }
       }
 
       function bindVariants() {
-        var lenBox = el('lenOptions');
-        var wBox = el('weightOptions');
-        function bind(box, attr, set) {
-          if (!box) return;
-          box.addEventListener('click', function (e) {
-            var b = e.target.closest('.variant-opt');
-            if (!b) return;
-            Array.prototype.forEach.call(box.children, function (c) { c.classList.remove('is-active'); });
-            b.classList.add('is-active');
-            set(b.getAttribute(attr));
-            applyVariant();
-          });
-        }
-        bind(lenBox, 'data-len', function (v) { selectedLen = v; });
-        bind(wBox, 'data-weight', function (v) { selectedWeight = v; });
+        var lenSel = el('popupLen');
+        var wSel = el('popupWeight');
+        if (lenSel) lenSel.addEventListener('change', onPopupVariantChange);
+        if (wSel) wSel.addEventListener('change', onPopupVariantChange);
       }
 
       var galleryImages = [];
@@ -573,7 +561,8 @@
       window.orderProduct = function () {
         var img = popupImages[0] || galleryImages[galleryIndex] || (el('productMainImage') || {}).src;
         popupIndex = 0;
-        if (typeof openOrder === 'function') openOrder(img, PRODUCT_TITLE, PRODUCT_PRICE);
+        reflectVariantOnPage();
+        if (typeof openOrder === 'function') openOrder(img, currentTitle(), currentPrice());
         renderPopupDots();
         setPopupIndex(0);
       };
@@ -623,7 +612,7 @@
 
       document.addEventListener('DOMContentLoaded', function () {
         bindVariants();
-        applyVariant();
+        reflectVariantOnPage();
         attachSwipe(document.querySelector('.product-stage'), function (d) { setGalleryIndex(galleryIndex + d); });
         attachSwipe(el('popupSlider'), function (d) { setPopupIndex(popupIndex + d); });
         probeSeries('gallery-', function (found) {

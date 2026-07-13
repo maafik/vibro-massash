@@ -3284,6 +3284,42 @@ section,
   box-shadow: 0 0 0 1px var(--accent-color) inset;
 }
 
+/* Выбор варианта в попапе (выпадающие списки) */
+.popup-variants {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 4px 0 14px;
+}
+
+.popup-variant {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: #9a9a9a;
+}
+
+.popup-variant select {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 15px;
+  color: #ededed;
+  background: #1c1c1c;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 10px;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23bbb' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.popup-variant select:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}
+
 /* Характеристики товара */
 .product-specs {
   margin-top: 22px;
