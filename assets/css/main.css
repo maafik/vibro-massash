@@ -3236,6 +3236,32 @@ section,
   color: #838383;
 }
 
+/* Характеристики товара */
+.product-specs {
+  margin-top: 22px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.product-specs-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.product-specs-row span:first-child {
+  color: #9a9a9a;
+  flex: 0 0 auto;
+}
+
+.product-specs-row span:last-child {
+  color: #ededed;
+  text-align: right;
+  font-weight: 500;
+}
+
 /*--------------------------------------------------------------
 # Ozon review / order card
 --------------------------------------------------------------*/
